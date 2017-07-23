@@ -4,13 +4,20 @@
 #include "small_shit.h"
 
 unsigned long FileSize(FILE *file);
-unsigned char * File_To_Buf_u(FILE * file);
-Buf <char> File_To_Buf_s(FILE * file);
-unsigned Number_Of_Lines(char * buf);
-char * The_End_Of_The_Word(char * source);
-char * Skip_Different_Shit(char * source);
-char * New_String_Lessmem(char * new_person);
-void To_The_Only_One_Line(char * buf);
+
+unsigned char *File_To_Buf_u(FILE *file);
+
+Buf<char> File_To_Buf_s(FILE *file);
+
+unsigned Number_Of_Lines(char *buf);
+
+char *The_End_Of_The_Word(char *source);
+
+char *Skip_Different_Shit(char *source);
+
+char *New_String_Lessmem(char *new_person);
+
+void To_The_Only_One_Line(char *buf);
 
 unsigned long FileSize(FILE *file) {
     assert(file);
@@ -20,13 +27,13 @@ unsigned long FileSize(FILE *file) {
     return Size;
 }
 
-unsigned char * File_To_Buf_u(FILE * file){
+unsigned char *File_To_Buf_u(FILE *file) {
     assert(file);
     unsigned long Size = FileSize(file);
     unsigned char *buf = (unsigned char *) calloc(Size + 1, 1);
     unsigned long New_Size = fread(buf, sizeof(char), Size + 1, file);
-    unsigned char * new_buf = (unsigned char *)calloc(New_Size + 1, sizeof(unsigned char));
-    for (unsigned long i = 0; i < New_Size; i++){
+    unsigned char *new_buf = (unsigned char *) calloc(New_Size + 1, sizeof(unsigned char));
+    for (unsigned long i = 0; i < New_Size; i++) {
         new_buf[i] = buf[i];
     }
     new_buf[New_Size] = '\0';
@@ -35,27 +42,27 @@ unsigned char * File_To_Buf_u(FILE * file){
     return new_buf;
 }
 
-Buf <char> File_To_Buf_s(FILE * file){
+Buf<char> File_To_Buf_s(FILE *file) {
     assert(file);
     unsigned long Size = FileSize(file);
     char *buf = (char *) calloc(Size + 1, 1);
     unsigned long New_Size = fread(buf, sizeof(char), Size + 1, file);
-    char * new_buf = (char *)calloc(New_Size + 1, sizeof(char));
-    for (unsigned long i = 0; i < New_Size; i++){
+    char *new_buf = (char *) calloc(New_Size + 1, sizeof(char));
+    for (unsigned long i = 0; i < New_Size; i++) {
         new_buf[i] = buf[i];
     }
     new_buf[New_Size] = '\0';
     free(buf);
-    Buf <char> Buffer = Buf<char>((size_t )New_Size);
+    Buf<char> Buffer = Buf<char>((size_t) New_Size);
     Buffer.m_data = new_buf;
     return Buffer;
 }
 
-unsigned Number_Of_Lines(char * buf){
+unsigned Number_Of_Lines(char *buf) {
     assert(buf);
     unsigned i = 0;
-    char * a = buf;
-    while (1){
+    char *a = buf;
+    while (1) {
         a = strchr(a, '\n');
         if (!a) break;
         a++;
@@ -64,10 +71,10 @@ unsigned Number_Of_Lines(char * buf){
     return i;
 }
 
-char * The_End_Of_The_Word(char * source){
+char *The_End_Of_The_Word(char *source) {
     assert(source);
-    char * ptr = source;
-    while (1){
+    char *ptr = source;
+    while (1) {
         if (!isalnum(*ptr) && *ptr != '_') break;
         if (*ptr == '\n') break;
         if (*ptr == '\r') break;
@@ -77,13 +84,13 @@ char * The_End_Of_The_Word(char * source){
     return ptr;
 }
 
-char * Skip_Different_Shit(char * source){
+char *Skip_Different_Shit(char *source) {
     assert(source);
-    char * ptr = source;
-    while (1){
-        if (*ptr == '/' && *(ptr + 1) == '/'){//Comments
+    char *ptr = source;
+    while (1) {
+        if (*ptr == '/' && *(ptr + 1) == '/') {//Comments
             ptr++;
-            while (1){
+            while (1) {
                 if (*ptr == '/' && *(ptr + 1) == '/')
                     break;
                 ptr++;
@@ -98,30 +105,45 @@ char * Skip_Different_Shit(char * source){
     return ptr;
 }
 
-char * New_String_Lessmem(char * new_person){
+char *New_String_Lessmem(char *new_person) {
     assert(new_person);
-    char * end = strchr(new_person, '\0');
-    char * new_person_lessmem = (char *) calloc((size_t)(end - new_person + 1), sizeof(char));
+    char *end = strchr(new_person, '\0');
+    char *new_person_lessmem = (char *) calloc((size_t) (end - new_person + 1), sizeof(char));
     assert(new_person_lessmem);
     strcpy(new_person_lessmem, new_person);
     free(new_person);
     return new_person_lessmem;
 }
 
-void To_The_Only_One_Line(char * buf){//replace all the \n to spaces
+void To_The_Only_One_Line(char *buf) {//replace all the \n to spaces
     assert(buf);
-    char * ptr = buf;
-    while(1){
+    char *ptr = buf;
+    while (1) {
         ptr = strchr(ptr, '\n');
         if (!ptr)
             break;
         *ptr = ' ';
     }
     ptr = buf;
-    while(1){
+    while (1) {
         ptr = strchr(ptr, '\r');
         if (!ptr)
             break;
         *ptr = ' ';
     }
+}
+
+template<typename T, typename T2, typename T3>
+bool IsEqual(T what, T2 compared, T3 eps) {
+    return (what < compared + eps) & (what > compared - eps);
+}
+
+template<typename T>
+int Sign(T value) {
+    if (IsEqual(value, 0, 0.01))
+        return 0;
+    if (value > 0)
+        return 1;
+    else
+        return -1;
 }
