@@ -1,0 +1,1 @@
+#define SUPER_ASSERT if (!this->ok()) {assert(this->dump());}
