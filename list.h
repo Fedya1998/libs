@@ -30,11 +30,19 @@ public:
 
     List_Elem<T>() {}
 
-    ~List_Elem<T>() {
+    void delete_recursively() {
         if (next)
             delete next;
         Gde;
         delete data_;
+        delete this;
+    }
+
+    ~List_Elem<T>(){
+        if (previous)
+            previous->next = next;
+        if (next)
+            next->previous = previous;
         return;
     }
 
@@ -94,19 +102,24 @@ public:
     List_Elem<T> *last_ = NULL;
     List_Elem<T> *final_ = NULL;
 
-    List_Elem<T> final();
+    List_Elem<T> & final() const;
 
-    List_Elem<T> first();
+    List_Elem<T> & first() const;
 
     size_t count = 0;
 public:
     List<T>() : final_(new List_Elem<T>) {};
+    explicit List<T>(const char * map_name){
+        /*
+        Вот здесь вот пиши
+        */
+    }
 
     ~List<T>() {
         delete final_;
         if (!first_)
             return;
-        delete first_;
+        first_->delete_recursively();
     };
 
     int (*Compare)(List_Elem<T> *, T *);
@@ -115,7 +128,7 @@ public:
 
     List_Elem<T> *find(T *value) const;
 
-    List_Elem<T> *search_by_index(unsigned index) const;
+    List_Elem<T> &search_by_index(unsigned index) const;
 
     bool ok() const;
 

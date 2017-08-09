@@ -10,13 +10,15 @@
 #include <debug_cpp.h>
 
 template<typename T>
-List_Elem<T> List<T>::first() {
+List_Elem<T> & List<T>::first() const{
     SUPER_ASSERT;
+    if (count == 0)
+        return final();
     return *first_;
 }
 
 template<typename T>
-List_Elem<T> List<T>::final() {
+List_Elem<T> & List<T>::final() const{
     SUPER_ASSERT;
     return *final_;
 }
@@ -24,7 +26,7 @@ List_Elem<T> List<T>::final() {
 template<typename T>
 List_Elem<T> &List<T>::operator[](unsigned i) {
     SUPER_ASSERT;
-    return *search_by_index(i);
+    return search_by_index(i);
 }
 
 template<typename T>
@@ -58,14 +60,14 @@ List_Elem<T> *List<T>::find(T *value) const {
 }
 
 template<typename T>
-List_Elem<T> *List<T>::search_by_index(unsigned index) const {
+List_Elem<T> &List<T>::search_by_index(unsigned index) const {
     SUPER_ASSERT;
     List_Elem<T> *element = first_;
     for (unsigned i = 0; i < index; i++, element = element->next) {
         if (i > count)
-            return NULL;
+            return final();
     }
-    return element;
+    return *element;
 }
 
 template<typename T>
