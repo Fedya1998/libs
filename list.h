@@ -109,11 +109,6 @@ public:
     size_t count = 0;
 public:
     List<T>() : final_(new List_Elem<T>) {};
-    explicit List<T>(const char * map_name){
-        /*
-        Вот здесь вот пиши
-        */
-    }
 
     ~List<T>() {
         delete final_;
