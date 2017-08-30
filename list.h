@@ -46,6 +46,11 @@ public:
         return;
     }
 
+
+    List_Elem* add_before(T * value);
+
+    List_Elem* add_before(List_Elem<T> * elem);
+
     bool ok() const{
         return header_ && data_;
     }
@@ -120,6 +125,8 @@ public:
     int (*Compare)(List_Elem<T> *, T *);
 
     void append(T *value);
+
+    void append(List_Elem<T> * elem);
 
     List_Elem<T> *find(T *value) const;
 

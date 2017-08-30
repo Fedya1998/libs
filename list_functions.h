@@ -30,22 +30,15 @@ List_Elem<T> &List<T>::operator[](unsigned i) {
 }
 
 template<typename T>
-void List<T>::append(T *value) {
-    SUPER_ASSERT;
-    /*if (find(value)) {
-        delete value;
-        return;
-    }*/
-    List_Elem<T> *elem = new List_Elem<T>(this, value);
-    count++;
-    if (!first_) {
-        first_ = elem;
-        last_ = elem;
-    } else {
-        last_->next = elem;
-        elem->previous = last_;
-        last_ = elem;
-    }
+List_Elem<T>* List_Elem<T>::add_before(T * value){
+    add_before(new List_Elem<T> (value));
+}
+
+template<typename T>
+List_Elem<T>* List_Elem<T>::add_before(List_Elem<T> * elem){
+    elem->previous = this->previous;
+    elem->next = this;
+    this->previous = elem;
 }
 
 template<typename T>
@@ -120,5 +113,30 @@ void List<T>::label_dump(FILE *file) const {
         }
     }
     fseek(file, file_pointer, SEEK_SET);
+}
+
+template<typename T>
+void List<T>::append(T *value) {
+    List_Elem<T> *elem = new List_Elem<T>(this, value);
+    append(elem);
+}
+
+template<typename T>
+void List<T>::append(List_Elem<T> *elem) {
+    SUPER_ASSERT;
+    /*if (find(value)) {
+        delete value;
+        return;
+    }*/
+
+    count++;
+    if (!first_) {
+        first_ = elem;
+        last_ = elem;
+    } else {
+        last_->next = elem;
+        elem->previous = last_;
+        last_ = elem;
+    }
 }
 
